@@ -19,11 +19,16 @@ def train(model, args, run_name):
     # create dataset, data augmentation
     device = "cuda" if torch.cuda.is_available() else "cpu"
     writer = SummaryWriter("logs/" + run_name)
-    train_transform = transforms.Compose(
-        [transforms.ToTensor(),
-        #transforms.RandomHorizontalFlip(p=0.5),
-        #ransforms.RandomVerticalFlip(p=0.5),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    if args.aug == "aug":
+        train_transform = transforms.Compose(
+            [transforms.ToTensor(),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomVerticalFlip(p=0.5),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    elif args.aug == "noaug":
+        train_transform = transforms.Compose(
+            [transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     test_transform = transforms.Compose(
         [transforms.ToTensor(),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
@@ -168,15 +173,15 @@ if __name__ == '__main__':
 
     parser.add_argument('--run', type=str, default='train')
     parser.add_argument('--model', type=str, default='vgg')
-    parser.add_argument('--norm', type=str, default='batch')
+    parser.add_argument('--aug', type=str, default='aug')
     parser.add_argument('--dropout', type=float, default=0.5)
-    parser.add_argument('--epochs', type=int, default=10)
+    parser.add_argument('--epochs', type=int, default=20)
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--batch_size", type=int, default=16)
     parser.add_argument("--ckpt_dir", type=str, default="")
     args = parser.parse_args()
 
-    run_name = args.run + "_" + args.model + "_" + args.norm + "_" + str(args.dropout) + "_" + str(args.lr)
+    run_name = args.run + "_" + args.model + "_" + args.aug + "_" + str(args.epochs)
     import datetime
     run_date = datetime.datetime.now().strftime('%H%M%S')
     run_name = run_name + '_' + run_date
