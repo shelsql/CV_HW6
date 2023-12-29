@@ -21,8 +21,8 @@ def train(model, args, run_name):
     writer = SummaryWriter("logs/" + run_name)
     train_transform = transforms.Compose(
         [transforms.ToTensor(),
-        transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomVerticalFlip(p=0.5),
+        #transforms.RandomHorizontalFlip(p=0.5),
+        #ransforms.RandomVerticalFlip(p=0.5),
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     test_transform = transforms.Compose(
         [transforms.ToTensor(),
